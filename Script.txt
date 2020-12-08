@@ -1,0 +1,307 @@
+USE [master]
+GO
+/****** Object:  Database [Library]    Script Date: 5/7/2019 2:25:12 AM ******/
+CREATE DATABASE [Library]
+ CONTAINMENT = NONE
+ ON  PRIMARY 
+( NAME = N'Library', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL12.SQLEXPRES\MSSQL\DATA\Library.mdf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
+ LOG ON 
+( NAME = N'Library_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL12.SQLEXPRES\MSSQL\DATA\Library_log.ldf' , SIZE = 8192KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
+GO
+IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
+begin
+EXEC [Library].[dbo].[sp_fulltext_database] @action = 'enable'
+end
+GO
+ALTER DATABASE [Library] SET ANSI_NULL_DEFAULT OFF 
+GO
+ALTER DATABASE [Library] SET ANSI_NULLS OFF 
+GO
+ALTER DATABASE [Library] SET ANSI_PADDING OFF 
+GO
+ALTER DATABASE [Library] SET ANSI_WARNINGS OFF 
+GO
+ALTER DATABASE [Library] SET ARITHABORT OFF 
+GO
+ALTER DATABASE [Library] SET AUTO_CLOSE OFF 
+GO
+ALTER DATABASE [Library] SET AUTO_SHRINK OFF 
+GO
+ALTER DATABASE [Library] SET AUTO_UPDATE_STATISTICS ON 
+GO
+ALTER DATABASE [Library] SET CURSOR_CLOSE_ON_COMMIT OFF 
+GO
+ALTER DATABASE [Library] SET CURSOR_DEFAULT  GLOBAL 
+GO
+ALTER DATABASE [Library] SET CONCAT_NULL_YIELDS_NULL OFF 
+GO
+ALTER DATABASE [Library] SET NUMERIC_ROUNDABORT OFF 
+GO
+ALTER DATABASE [Library] SET QUOTED_IDENTIFIER OFF 
+GO
+ALTER DATABASE [Library] SET RECURSIVE_TRIGGERS OFF 
+GO
+ALTER DATABASE [Library] SET  DISABLE_BROKER 
+GO
+ALTER DATABASE [Library] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
+GO
+ALTER DATABASE [Library] SET DATE_CORRELATION_OPTIMIZATION OFF 
+GO
+ALTER DATABASE [Library] SET TRUSTWORTHY OFF 
+GO
+ALTER DATABASE [Library] SET ALLOW_SNAPSHOT_ISOLATION OFF 
+GO
+ALTER DATABASE [Library] SET PARAMETERIZATION SIMPLE 
+GO
+ALTER DATABASE [Library] SET READ_COMMITTED_SNAPSHOT OFF 
+GO
+ALTER DATABASE [Library] SET HONOR_BROKER_PRIORITY OFF 
+GO
+ALTER DATABASE [Library] SET RECOVERY FULL 
+GO
+ALTER DATABASE [Library] SET  MULTI_USER 
+GO
+ALTER DATABASE [Library] SET PAGE_VERIFY CHECKSUM  
+GO
+ALTER DATABASE [Library] SET DB_CHAINING OFF 
+GO
+ALTER DATABASE [Library] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
+GO
+ALTER DATABASE [Library] SET TARGET_RECOVERY_TIME = 60 SECONDS 
+GO
+ALTER DATABASE [Library] SET DELAYED_DURABILITY = DISABLED 
+GO
+EXEC sys.sp_db_vardecimal_storage_format N'Library', N'ON'
+GO
+USE [Library]
+GO
+/****** Object:  Table [dbo].[tbl_AdminDetails]    Script Date: 5/7/2019 2:25:12 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[tbl_AdminDetails](
+	[UserID] [int] NOT NULL,
+	[Salary] [float] NOT NULL,
+	[HireDate] [datetime] NULL,
+	[Shift] [int] NOT NULL,
+ CONSTRAINT [PK_tbl_AdminDetails] PRIMARY KEY CLUSTERED 
+(
+	[UserID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[tbl_Author]    Script Date: 5/7/2019 2:25:12 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[tbl_Author](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [varchar](45) NOT NULL,
+	[Birthdate] [datetime] NULL,
+	[Address] [varchar](45) NULL
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[tbl_Book]    Script Date: 5/7/2019 2:25:12 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[tbl_Book](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[ISBN] [int] NOT NULL,
+	[PublisherID] [int] NOT NULL,
+	[AuthorID] [int] NOT NULL,
+	[Name] [varchar](45) NOT NULL,
+	[Genre] [varchar](20) NOT NULL,
+	[Copies] [smallint] NOT NULL
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[tbl_Borrow]    Script Date: 5/7/2019 2:25:12 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[tbl_Borrow](
+	[UserID] [int] NOT NULL,
+	[BookID] [int] NOT NULL,
+	[Date] [datetime] NOT NULL,
+ CONSTRAINT [PK_BORROW] PRIMARY KEY CLUSTERED 
+(
+	[UserID] ASC,
+	[BookID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[tbl_Edition]    Script Date: 5/7/2019 2:25:12 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[tbl_Edition](
+	[Pages] [int] NOT NULL,
+	[Version] [varchar](50) NOT NULL,
+	[BookID] [int] NOT NULL,
+ CONSTRAINT [PK_tbl_Edition] PRIMARY KEY CLUSTERED 
+(
+	[Version] ASC,
+	[BookID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[tbl_Publisher]    Script Date: 5/7/2019 2:25:12 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[tbl_Publisher](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [varchar](45) NOT NULL,
+	[Address] [varchar](45) NULL
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[tbl_Student]    Script Date: 5/7/2019 2:25:12 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[tbl_Student](
+	[University] [varchar](40) NULL,
+	[University_ID] [varchar](30) NULL,
+	[GPA] [float] NULL,
+	[User_ID] [int] NOT NULL,
+ CONSTRAINT [PK_tbl_Student] PRIMARY KEY CLUSTERED 
+(
+	[User_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[tbl_User]    Script Date: 5/7/2019 2:25:12 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[tbl_User](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Username] [varchar](45) NOT NULL,
+	[Password] [varchar](50) NOT NULL,
+	[FName] [varchar](20) NOT NULL,
+	[SName] [varchar](20) NOT NULL,
+	[Birthdate] [datetime] NOT NULL,
+	[Address] [varchar](100) NULL,
+	[Email] [varchar](30) NULL,
+	[PhoneNumber] [varchar](30) NOT NULL,
+	[NationalID] [varchar](30) NULL,
+	[RoleName] [varchar](20) NOT NULL
+) ON [PRIMARY]
+GO
+INSERT [dbo].[tbl_AdminDetails] ([UserID], [Salary], [HireDate], [Shift]) VALUES (14, 1000000, CAST(N'2019-04-30T00:00:00.000' AS DateTime), 1)
+GO
+INSERT [dbo].[tbl_AdminDetails] ([UserID], [Salary], [HireDate], [Shift]) VALUES (16, 20, CAST(N'2019-05-03T00:00:00.000' AS DateTime), 2)
+GO
+SET IDENTITY_INSERT [dbo].[tbl_Author] ON 
+GO
+INSERT [dbo].[tbl_Author] ([ID], [Name], [Birthdate], [Address]) VALUES (3, N'Khaled', CAST(N'2019-05-01T00:00:00.000' AS DateTime), N'Giza')
+GO
+INSERT [dbo].[tbl_Author] ([ID], [Name], [Birthdate], [Address]) VALUES (4, N'Ezzat', CAST(N'2019-05-01T00:00:00.000' AS DateTime), N'Faisal')
+GO
+INSERT [dbo].[tbl_Author] ([ID], [Name], [Birthdate], [Address]) VALUES (5, N'hh', CAST(N'2019-05-02T00:00:00.000' AS DateTime), N'hh')
+GO
+INSERT [dbo].[tbl_Author] ([ID], [Name], [Birthdate], [Address]) VALUES (6, N'Author 1', CAST(N'2019-05-04T00:00:00.000' AS DateTime), N'Giza')
+GO
+SET IDENTITY_INSERT [dbo].[tbl_Author] OFF
+GO
+SET IDENTITY_INSERT [dbo].[tbl_Book] ON 
+GO
+INSERT [dbo].[tbl_Book] ([ID], [ISBN], [PublisherID], [AuthorID], [Name], [Genre], [Copies]) VALUES (11, 5, 2, 3, N'b', N'b', 4)
+GO
+SET IDENTITY_INSERT [dbo].[tbl_Book] OFF
+GO
+INSERT [dbo].[tbl_Borrow] ([UserID], [BookID], [Date]) VALUES (23, 11, CAST(N'2019-05-05T21:28:51.807' AS DateTime))
+GO
+SET IDENTITY_INSERT [dbo].[tbl_Publisher] ON 
+GO
+INSERT [dbo].[tbl_Publisher] ([ID], [Name], [Address]) VALUES (2, N'Khaled Publisher', N'Cairo')
+GO
+INSERT [dbo].[tbl_Publisher] ([ID], [Name], [Address]) VALUES (3, N'Publisher 1', N'Faisal')
+GO
+SET IDENTITY_INSERT [dbo].[tbl_Publisher] OFF
+GO
+INSERT [dbo].[tbl_Student] ([University], [University_ID], [GPA], [User_ID]) VALUES (N'e', N'e', 5, 23)
+GO
+SET IDENTITY_INSERT [dbo].[tbl_User] ON 
+GO
+INSERT [dbo].[tbl_User] ([ID], [Username], [Password], [FName], [SName], [Birthdate], [Address], [Email], [PhoneNumber], [NationalID], [RoleName]) VALUES (16, N'admin', N'admin', N'Khaled', N'Elhadary', CAST(N'2019-05-03T00:00:00.000' AS DateTime), N'test add', N'khaledelhadary@outlook.com', N'0100', N'123644', N'Admin')
+GO
+INSERT [dbo].[tbl_User] ([ID], [Username], [Password], [FName], [SName], [Birthdate], [Address], [Email], [PhoneNumber], [NationalID], [RoleName]) VALUES (23, N'e', N'e', N'e', N'e', CAST(N'2019-05-05T00:00:00.000' AS DateTime), N'e', N'e', N'e', N'e', N'Student')
+GO
+INSERT [dbo].[tbl_User] ([ID], [Username], [Password], [FName], [SName], [Birthdate], [Address], [Email], [PhoneNumber], [NationalID], [RoleName]) VALUES (14, N'zamalek', N'zamalek', N'sundowns', N'south africa', CAST(N'2019-04-30T00:00:00.000' AS DateTime), N'meet 3o2ba', N'zamalekSC@gmail.com', N'01016395068', N'0237416238', N'Admin')
+GO
+SET IDENTITY_INSERT [dbo].[tbl_User] OFF
+GO
+/****** Object:  Index [PK_AUTHOR]    Script Date: 5/7/2019 2:25:13 AM ******/
+ALTER TABLE [dbo].[tbl_Author] ADD  CONSTRAINT [PK_AUTHOR] PRIMARY KEY NONCLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+/****** Object:  Index [PK_BOOKS]    Script Date: 5/7/2019 2:25:13 AM ******/
+ALTER TABLE [dbo].[tbl_Book] ADD  CONSTRAINT [PK_BOOKS] PRIMARY KEY NONCLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+/****** Object:  Index [PK_PUBLISHER]    Script Date: 5/7/2019 2:25:13 AM ******/
+ALTER TABLE [dbo].[tbl_Publisher] ADD  CONSTRAINT [PK_PUBLISHER] PRIMARY KEY NONCLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+/****** Object:  Index [PK_tbl_USER]    Script Date: 5/7/2019 2:25:13 AM ******/
+ALTER TABLE [dbo].[tbl_User] ADD  CONSTRAINT [PK_tbl_USER] PRIMARY KEY NONCLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[tbl_AdminDetails]  WITH CHECK ADD  CONSTRAINT [FK_tbl_AdminDetails_tbl_User] FOREIGN KEY([UserID])
+REFERENCES [dbo].[tbl_User] ([ID])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[tbl_AdminDetails] CHECK CONSTRAINT [FK_tbl_AdminDetails_tbl_User]
+GO
+ALTER TABLE [dbo].[tbl_Book]  WITH CHECK ADD  CONSTRAINT [FK_tbl_Book_tbl_Author] FOREIGN KEY([AuthorID])
+REFERENCES [dbo].[tbl_Author] ([ID])
+GO
+ALTER TABLE [dbo].[tbl_Book] CHECK CONSTRAINT [FK_tbl_Book_tbl_Author]
+GO
+ALTER TABLE [dbo].[tbl_Book]  WITH CHECK ADD  CONSTRAINT [FK_tbl_Book_tbl_Publisher] FOREIGN KEY([PublisherID])
+REFERENCES [dbo].[tbl_Publisher] ([ID])
+GO
+ALTER TABLE [dbo].[tbl_Book] CHECK CONSTRAINT [FK_tbl_Book_tbl_Publisher]
+GO
+ALTER TABLE [dbo].[tbl_Borrow]  WITH CHECK ADD  CONSTRAINT [FK_tbl_Borrow_tbl_Book] FOREIGN KEY([BookID])
+REFERENCES [dbo].[tbl_Book] ([ID])
+GO
+ALTER TABLE [dbo].[tbl_Borrow] CHECK CONSTRAINT [FK_tbl_Borrow_tbl_Book]
+GO
+ALTER TABLE [dbo].[tbl_Borrow]  WITH CHECK ADD  CONSTRAINT [FK_tbl_Borrow_tbl_User] FOREIGN KEY([UserID])
+REFERENCES [dbo].[tbl_User] ([ID])
+GO
+ALTER TABLE [dbo].[tbl_Borrow] CHECK CONSTRAINT [FK_tbl_Borrow_tbl_User]
+GO
+ALTER TABLE [dbo].[tbl_Edition]  WITH CHECK ADD  CONSTRAINT [FK_tbl_Edition_tbl_Book] FOREIGN KEY([BookID])
+REFERENCES [dbo].[tbl_Book] ([ID])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[tbl_Edition] CHECK CONSTRAINT [FK_tbl_Edition_tbl_Book]
+GO
+ALTER TABLE [dbo].[tbl_Student]  WITH CHECK ADD  CONSTRAINT [FK_tbl_Student_tbl_User] FOREIGN KEY([User_ID])
+REFERENCES [dbo].[tbl_User] ([ID])
+GO
+ALTER TABLE [dbo].[tbl_Student] CHECK CONSTRAINT [FK_tbl_Student_tbl_User]
+GO
+USE [master]
+GO
+ALTER DATABASE [Library] SET  READ_WRITE 
+GO
